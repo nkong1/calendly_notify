@@ -13,11 +13,27 @@ def get_current_month_url():
     return f"https://calendly.com/kong_nicholas-berkeley/30min?month={month}"
     return f"https://calendly.com/leantutor-berkeley/leantutor-user-study?month={month}"
 
+
 def send_email(slots):
-    msg = MIMEText("Calendly slots are available — book now!\n\n" + "\n".join(slots))
-    msg["Subject"] = "🚨 Calendly Slot Available!"
+    count = len(slots)
+    first = slots[0]
+    last = slots[-1]
+    
+    # Detailed body text
+    body = (
+        f"Great news! We found {count} available slots.\n"
+        f"Earliest: {first}\n"
+        f"Latest: {last}\n\n"
+        "Full list of times:\n" + "\n".join(slots) +
+        f"\n\nBook here: {get_current_month_url()}"
+    )
+
+    msg = MIMEText(body)
+    # Dynamic Subject line so you know exactly what's up before opening the email
+    msg["Subject"] = f"🚨 {count} Slots Available ({first} - {last})"
     msg["From"] = EMAIL_SENDER
     msg["To"] = EMAIL_RECEIVER
+    
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(EMAIL_SENDER, EMAIL_PASSWORD)
         server.send_message(msg)
