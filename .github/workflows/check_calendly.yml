@@ -2,7 +2,6 @@ name: Check Calendly Slots
 
 on:
   schedule:
-    # Covers 4:00 PM UTC to 11:59 PM UTC (8:00 AM to 3:59 PM PST)
     - cron: "*/5 * * * *"
   workflow_dispatch:
 

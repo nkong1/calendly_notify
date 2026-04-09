@@ -11,7 +11,9 @@ EMAIL_RECEIVER = os.environ["EMAIL_RECEIVER"]
 def get_current_month_url():
     base_url = os.environ["CALENDLY_URL"]  
     month = datetime.now().strftime("%Y-%m")
+    print(f"Checking Calendly URL: {base_url}?month={month}")
     return f"{base_url}?month={month}"
+
 
 def send_email(slots):
     count = len(slots)
