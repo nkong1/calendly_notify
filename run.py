@@ -10,6 +10,7 @@ EMAIL_RECEIVER = os.environ["EMAIL_RECEIVER"]
 
 def get_current_month_url():
     month = datetime.now().strftime("%Y-%m")
+    return f"https://calendly.com/kong_nicholas-berkeley/30min?month={month}"
     return f"https://calendly.com/leantutor-berkeley/leantutor-user-study?month={month}"
 
 def send_email(slots):
