@@ -2,12 +2,14 @@ name: Check Calendly Slots
 
 on:
   schedule:
+    # Covers 4:00 PM UTC to 11:59 PM UTC (8:00 AM to 3:59 PM PST)
     - cron: "*/5 * * * *"
   workflow_dispatch:
 
 jobs:
   check_slots:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
 
     steps:
       - name: Checkout repository
@@ -17,15 +19,18 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
           pip install playwright
-          playwright install --with-deps # Added --with-deps for Linux compatibility
+          playwright install --with-deps
 
       - name: Run Calendly watcher
         env:
           EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
-        run: python $GITHUB_WORKSPACE/run.py
+          CALENDLY_URL: ${{ secrets.CALENDLY_URL }}
+          HEADLESS: "true"
+        run: python run.py

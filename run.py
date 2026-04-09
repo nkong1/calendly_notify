@@ -9,9 +9,9 @@ EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
 EMAIL_RECEIVER = os.environ["EMAIL_RECEIVER"]
 
 def get_current_month_url():
+    base_url = os.environ["CALENDLY_URL"]  
     month = datetime.now().strftime("%Y-%m")
-    return f"https://calendly.com/leantutor-berkeley/leantutor-user-study?month={month}"
-
+    return f"{base_url}?month={month}"
 
 def send_email(slots):
     count = len(slots)
@@ -28,8 +28,7 @@ def send_email(slots):
     )
 
     msg = MIMEText(body)
-    # Dynamic Subject line so you know exactly what's up before opening the email
-    msg["Subject"] = f"🚨 {count} Slots Available ({first} - {last})"
+    msg["Subject"] = f"{count} Slots Available ({first} - {last})"
     msg["From"] = EMAIL_SENDER
     msg["To"] = EMAIL_RECEIVER
     
