@@ -39,12 +39,23 @@ def send_email(slots):
         server.send_message(msg)
 
 def get_slots(page):
-    buttons = page.query_selector_all("button")
     slots = []
-    for b in buttons:
-        text = b.inner_text().strip()
-        if any(x in text.lower() for x in ["am", "pm"]):
-            slots.append(text)
+
+    # Find only days that have availability
+    available_days = page.query_selector_all("button[aria-label*='Times available']")
+
+    for day in available_days:
+        day_label = day.get_attribute("aria-label").replace(" - Times available", "")
+        day.click()
+        page.wait_for_timeout(1500)
+
+        # Grab time buttons using the specific data-container attribute
+        time_buttons = page.query_selector_all("button[data-container='time-button']")
+        for t in time_buttons:
+            time = t.get_attribute("data-start-time")
+            if time:
+                slots.append(f"{day_label} - {time}")
+
     return sorted(set(slots))
 
 def main():
